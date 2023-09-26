@@ -2,12 +2,21 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 from PIL import Image
+from io import BytesIO
+import requests
 
 
 st.set_page_config(layout= "wide")
 
 st.cache_data
 def gerar_df():
+
+    # URL do arquivo do Excel
+    url = "https://github.com/rodolffoterra/streamlit_preco_combustivel/raw/main/database_anp.xlsx"
+
+    # Faça o download do arquivo
+    response = requests.get(url)
+
     df =pd.read_excel(
         io = "database_anp.xlsx",
         engine= "openpyxl",
@@ -19,6 +28,8 @@ def gerar_df():
 df = gerar_df()
 colunasUteis = ['MÊS','PRODUTO','REGIÃO','ESTADO','PREÇO MÉDIO REVENDA']
 df = df[colunasUteis]
+
+
 
 with st.sidebar:
     st.subheader("Produtividade 100%")
@@ -34,6 +45,23 @@ with st.sidebar:
         "Selecione o Estado",
         options= df['ESTADO'].unique()
     )
+
+
+    st.title("Filtro de Período por Anos")
+
+    # Ano inicial e final padrão
+    ano_inicial = int(str(min(df['MÊS']))[:4])
+    ano_final = int(str(max(df['MÊS']))[:4])
+
+    # Widget de seleção de anos
+    ano_inicial, ano_final = st.slider(
+        "Selecione o período (anos)",
+        min_value=ano_inicial,
+        max_value=ano_final,
+        value=(ano_inicial, ano_final),
+        step=1
+    )
+
 
     dadosUsuario = df.loc[(
         df['PRODUTO'] == fProduto) &
