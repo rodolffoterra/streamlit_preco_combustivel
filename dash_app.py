@@ -33,12 +33,12 @@ df = df[colunasUteis]
 
 with st.sidebar:
     st.subheader("Produtividade 100%")
-    logo_teste = Image.open("logo.jpg")
-    st.image(logo_teste, use_column_width= True)
+    logo_url = "https://raw.githubusercontent.com/rodolffoterra/streamlit_preco_combustivel/main/logo.jpg"
+    st.image(logo_url, caption="Logo", use_column_width=True)
     st.subheader("Seleção de filtros")
     fProduto = st.selectbox(
         "Selecione o Combustível",
-        options= df['PRODUTO'].unique()
+        options=df['PRODUTO'].unique()
     )
 
     fEstado = st.selectbox(
